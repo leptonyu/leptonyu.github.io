@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on 云淡风轻</title>
+    <link>/tags/</link>
+    <description>Recent content in Tags on 云淡风轻</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>©2020</copyright>
+    <lastBuildDate>Tue, 23 Jun 2020 15:56:02 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MicroServices</title>
+      <link>/tags/microservices/</link>
+      <pubDate>Tue, 23 Jun 2020 15:56:02 +0800</pubDate>
+      
+      <guid>/tags/microservices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Java</title>
+      <link>/tags/java/</link>
+      <pubDate>Mon, 22 Jun 2020 10:10:00 +0800</pubDate>
+      
+      <guid>/tags/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring</title>
+      <link>/tags/spring/</link>
+      <pubDate>Mon, 22 Jun 2020 10:10:00 +0800</pubDate>
+      
+      <guid>/tags/spring/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring Boot</title>
+      <link>/tags/spring-boot/</link>
+      <pubDate>Mon, 22 Jun 2020 10:10:00 +0800</pubDate>
+      
+      <guid>/tags/spring-boot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud</title>
+      <link>/tags/spring-cloud/</link>
+      <pubDate>Mon, 22 Jun 2020 10:10:00 +0800</pubDate>
+      
+      <guid>/tags/spring-cloud/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

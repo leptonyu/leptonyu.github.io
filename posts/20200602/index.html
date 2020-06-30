@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  
+    <title>Spring Cloud 微服务项目构建 :: 云淡风轻 — Work forever</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="本文用于记录搭建基于Spring Cloud的微服务项目的架构骨架。基础构建工具使用Gradle/KotlinSDL，Java版本为11，微服" />
+<meta name="keywords" content="MicroServices" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/posts/20200602/" />
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-51198533-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+  <link rel="stylesheet" href="/assets/blue.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="/img/favicon/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+<meta name="twitter:creator" content="leptonyu" />
+
+
+<meta property="og:locale" content="zh" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Spring Cloud 微服务项目构建 :: 云淡风轻">
+<meta property="og:description" content="本文用于记录搭建基于Spring Cloud的微服务项目的架构骨架。基础构建工具使用Gradle/KotlinSDL，Java版本为11，微服" />
+<meta property="og:url" content="/posts/20200602/" />
+<meta property="og:site_name" content="Spring Cloud 微服务项目构建" />
+
+  <meta property="og:image" content="/">
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2020-06-22 10:10:00 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/js/katex/katex.min.css" >
+<script src="/js/katex/katex.min.js" > </script>
+<script src="/js/katex/contrib/auto-render.min.js" ></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body);
+    });
+</script>
+
+</head>
+<body class="">
+
+
+<div class="container headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    云淡风轻
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/posts">博客</a></li>
+        
+      
+        
+          <li><a href="/archive">归档</a></li>
+        
+      
+        
+          <li><a href="https://github.com/leptonyu">GitHub</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/posts">博客</a></li>
+      
+    
+      
+        <li><a href="/archive">归档</a></li>
+      
+    
+      
+        <li><a href="https://github.com/leptonyu">GitHub</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="/posts/20200602/">Spring Cloud 微服务项目构建</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2020-06-22 
+      </span>
+    
+    
+    <span class="post-author">::
+      Daniel YU
+    </span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="/tags/java/">Java</a>&nbsp;
+    
+    #<a href="/tags/spring/">Spring</a>&nbsp;
+    
+    #<a href="/tags/spring-boot/">Spring Boot</a>&nbsp;
+    
+    #<a href="/tags/spring-cloud/">Spring Cloud</a>&nbsp;
+    
+    #<a href="/tags/microservices/">MicroServices</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>本文用于记录搭建基于Spring Cloud的微服务项目的架构骨架。基础构建工具使用Gradle/KotlinSDL，Java版本为11，微服务框架Spring Cloud。项目构建只考虑统一语言、统一框架的前提下构建，因此所有的微服务代码都置于同一个git仓库中，因此需要启用多模块的Gradle项目。</p>
+<ol>
+<li><a href="#%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7">构建工具</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84">项目基本结构</a></li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6">服务基础组件</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E6%96%B9starter">第三方starter</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83">代码规范</a></li>
+<li><a href="#git%E5%B7%A5%E4%BD%9C%E6%B5%81">Git工作流</a></li>
+<li><a href="#ci%E5%92%8Ccd">基于Gitlab的CI和CD</a></li>
+</ol>
+<h3 id="构建工具">构建工具<a href="#构建工具" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>项目构建工具采用Gradle 6.5/KotlinSDL，Java 11。构建脚本分为三个文件：</p>
+<ol>
+<li>settings.gradle.kts</li>
+<li>build.gradle.kts</li>
+<li>gradle.properties</li>
+</ol>
+<h5 id="settingsgradlekts">settings.gradle.kts<a href="#settingsgradlekts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>该文件主要负责插件管理和项目导入，样例代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Kotlin" data-lang="Kotlin"><span style="color:#75715e">// 插件管理
+</span><span style="color:#75715e"></span>pluginManagement {
+
+    <span style="color:#75715e">// 替换官方源，毕竟离得近下载的更快
+</span><span style="color:#75715e"></span>    repositories {
+        maven(url = <span style="color:#e6db74">&#34;https://maven.aliyun.com/nexus/content/groups/public/&#34;</span>) {
+            <span style="color:#75715e">// 修复阿里云maven仓库实际是http协议的问题。
+</span><span style="color:#75715e"></span>            isAllowInsecureProtocol = <span style="color:#66d9ef">true</span>
+        }
+        <span style="color:#75715e">// 插件官方源
+</span><span style="color:#75715e"></span>        gradlePluginPortal()
+    }
+    <span style="color:#75715e">// 该配置中把插件的版本统一放置到gradle.properties文件管理
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> map = mapOf(
+            <span style="color:#e6db74">&#34;org.springframework.boot&#34;</span> to <span style="color:#e6db74">&#34;springBootVersion&#34;</span>,
+            <span style="color:#e6db74">&#34;io.spring.dependency-management&#34;</span> to <span style="color:#e6db74">&#34;springDependencyVersion&#34;</span>,
+    )
+    resolutionStrategy {
+        eachPlugin {
+            map.<span style="color:#66d9ef">get</span>(requested.id.id)
+                    <span style="color:#f92672">?.</span>let { useVersion(gradle.rootProject.extra[it] <span style="color:#66d9ef">as</span> String) }
+        }
+    }
+}
+<span style="color:#75715e">//项目导入
+</span><span style="color:#75715e"></span>include(
+  <span style="color:#75715e">// 基础公用代码
+</span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;base-dto&#34;</span>,
+  <span style="color:#75715e">// 基础starters，多个
+</span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;base-starter&#34;</span>,
+  <span style="color:#75715e">// 第三方starters，多个
+</span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;third-starter-xxx&#34;</span>,
+  <span style="color:#75715e">// 通用服务
+</span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;config-war&#34;</span>,
+  <span style="color:#e6db74">&#34;gateway-war&#34;</span>,
+  <span style="color:#75715e">// 项目模块
+</span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;user-dto&#34;</span>,
+  <span style="color:#e6db74">&#34;user-client&#34;</span>,
+  <span style="color:#e6db74">&#34;user-war&#34;</span>
+  <span style="color:#75715e">// 其他项目模块
+</span><span style="color:#75715e"></span>)
+
+</code></pre></div><h5 id="buildgradlekts">build.gradle.kts<a href="#buildgradlekts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>该文件主要负责Gradle构建相关的所有内容，不同于Maven，Gradle可以很方便的编写自定义任务。</p>
+<ol>
+<li>首先考虑的是插件声明以及版本的导入：</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Kotlin" data-lang="Kotlin"><span style="color:#75715e">//插件声明但不导入，后面按需apply。
+</span><span style="color:#75715e"></span>plugins {
+    id(<span style="color:#e6db74">&#34;org.springframework.boot&#34;</span>) apply <span style="color:#66d9ef">false</span>
+    id(<span style="color:#e6db74">&#34;io.spring.dependency-management&#34;</span>) apply <span style="color:#66d9ef">false</span>
+}
+
+<span style="color:#75715e">//从gradle.properties导入版本信息，这些变量可以用于settings.gradle.kts。
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">val</span> springCloudVersion: String <span style="color:#66d9ef">by</span> project
+<span style="color:#66d9ef">val</span> springBootVersion: String <span style="color:#66d9ef">by</span> project
+<span style="color:#66d9ef">val</span> springVersion: String <span style="color:#66d9ef">by</span> project
+<span style="color:#66d9ef">val</span> lombokVersion: String <span style="color:#66d9ef">by</span> project
+
+<span style="color:#75715e">//版本解析，同时自动从GitLab-ci的环境变量读取、或者从本地git目录读取commitid。
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">val</span> rawVersion: String <span style="color:#66d9ef">by</span> project
+<span style="color:#66d9ef">val</span> revision = System.getenv(<span style="color:#e6db74">&#34;CI_COMMIT_SHORT_SHA&#34;</span>) <span style="color:#f92672">?:</span> runCmd(<span style="color:#e6db74">&#34;git rev-parse --short HEAD&#34;</span>)
+allprojects {
+    version = rawVersion + (<span style="color:#66d9ef">if</span> (isRelease()) <span style="color:#e6db74">&#34;-RELEASE&#34;</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;-SNAPSHOT&#34;</span>)
+    task(<span style="color:#e6db74">&#34;printVersion&#34;</span>) { doLast { println(version) } }
+    task(<span style="color:#e6db74">&#34;printRevision&#34;</span>) { doLast { println(revision) } }
+}
+</code></pre></div><p>函数<code>isRelease</code>可以用于判定版本的有效性，包含格式以及和git分支/标签名称的匹配情况。</p>
+<ol start="2">
+<li>所有子项目的配置</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Kotlin" data-lang="Kotlin">
+subprojects {
+    <span style="color:#75715e">//统一激活子项目插件，此处设置可以排除rootProject作为一个java项目。
+</span><span style="color:#75715e"></span>    apply(plugin = <span style="color:#e6db74">&#34;java&#34;</span>)
+    apply(plugin = <span style="color:#e6db74">&#34;java-library&#34;</span>)
+    apply(plugin = <span style="color:#e6db74">&#34;idea&#34;</span>)
+    apply(plugin = <span style="color:#e6db74">&#34;io.spring.dependency-management&#34;</span>)
+
+    <span style="color:#75715e">//设置基础JDK版本和编码
+</span><span style="color:#75715e"></span>    tasks.withType&lt;JavaCompile&gt; {
+        options.encoding = <span style="color:#e6db74">&#34;UTF-8&#34;</span>
+        sourceCompatibility = JavaVersion.VERSION_11.toString()
+        targetCompatibility = JavaVersion.VERSION_11.toString()
+    }
+
+    <span style="color:#75715e">//项目的Maven仓库
+</span><span style="color:#75715e"></span>    repositories {
+        maven(url = <span style="color:#e6db74">&#34;https://maven.aliyun.com/nexus/content/groups/public/&#34;</span>) {
+            isAllowInsecureProtocol = <span style="color:#66d9ef">true</span>
+        }
+        maven(url = <span style="color:#e6db74">&#34;https://repo.spring.io/milestone&#34;</span>)
+        mavenCentral()
+    }
+
+    <span style="color:#75715e">//针对Spring项目的版本管理，可以导入所有Spring管理的库版本号。
+</span><span style="color:#75715e"></span>    configure&lt;DependencyManagementExtension&gt; {
+        imports {
+            mavenBom(<span style="color:#e6db74">&#34;org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion&#34;</span>)
+            mavenBom(<span style="color:#e6db74">&#34;org.springframework.boot:spring-boot-dependencies:$springBootVersion&#34;</span>)
+            mavenBom(<span style="color:#e6db74">&#34;org.springframework:spring-framework-bom:$springVersion&#34;</span>)
+        }
+    }
+  <span style="color:#75715e">// 剩下子项目配置
+</span><span style="color:#75715e"></span>}
+</code></pre></div><h5 id="gradleproperties">gradle.properties<a href="#gradleproperties" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>该文件主要配置版本信息以及一些编译参数</p>
+<pre><code class="language-properties" data-lang="properties">group=your.company
+rawVersion=1.0.0
+
+org.gradle.jvmargs=-Xms128m -Xmx1024m -XX:+CMSClassUnloadingEnabled
+
+springVersion=5.2.6.RELEASE
+springBootVersion=2.3.0.RELEASE
+springCloudVersion=2020.0.0-M2
+springDependencyVersion=1.0.9.RELEASE
+lombokVersion=1.18.12
+</code></pre><h3 id="项目基本结构">项目基本结构<a href="#项目基本结构" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Gradle灵活的SDL可以让我们方便的对项目模块根据名称进行归类。 如前面<code>settings.gradle.kts</code>文件中加载的模块那样，我对项目的模块通过名称进行了划分。每个模块的名字都以字母单词和横杠<code>-</code>作为分隔符组成，大概包括几类：<code>base-**</code>、<code>base-starter-**</code>、<code>third-starter-**</code>、<code>*-dto</code>、<code>*-client</code>、<code>*-war</code>。</p>
+<h5 id="全局公共类库base-dto">全局公共类库：<code>base-dto</code><a href="#全局公共类库base-dto" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>全局公共类库用于放置所有模块都依赖的公共类。一些公用定义类、工具类等均可放在这里。</p>
+<h5 id="全局starter公共类库base-starter">全局starter公共类库：<code>base-starter</code><a href="#全局starter公共类库base-starter" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>starter公共类库用于放置所有模块都需要加载的starter配置。</p>
+<h5 id="基础startersbase-starter-">基础starters：<code>base-starter-**</code><a href="#基础startersbase-starter-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>基础类starter用于简单包装spring-boot提供的starters，或者增加自己的工具层。一般属于那些存在一定的定制需求，并且不是每个项目都需要的模块。例如Job配置模块、Cache配置模块、消息配置模块、数据库配置模块、RPC配置模块等。某些简单的项目，例如验证码服务只需要Cache即可。因此每个实际的业务项目可能需要依赖的starters是不同的。项目架构上，应当尽量控制依赖的数量和质量，为后续项目的变更处理减少障碍（项目的变更原因可能是JDK升级、框架升级或者bug导致的升级）。Gradle脚本可以自动为基础starters添加通用的依赖（base-dto和bast-starter），这两个模块是开发starter必备的，同时也可以减少通用依赖分散在每个starter项目中，从而减轻开发和管理成本。</p>
+<p>Gradle脚本配置示例如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Kotlin" data-lang="Kotlin">subprojects {
+  <span style="color:#75715e">//其他配置
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (project.name.startsWith(<span style="color:#e6db74">&#34;base-starter-&#34;</span>)) {
+        dependencies {
+            api(project(<span style="color:#e6db74">&#34;:base-dto&#34;</span>))
+            api(project(<span style="color:#e6db74">&#34;:base-starter&#34;</span>))
+        }
+    }
+  <span style="color:#75715e">//其他配置
+</span><span style="color:#75715e"></span>}
+</code></pre></div><h5 id="第三方starters-third-starter-">第三方starters: <code>third-starter-**</code><a href="#第三方starters-third-starter-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>第三方starter用于对接第三方服务。通常第三方服务都提供了http的api，因此可以统一手工对接API。采用的方式可以是RestTemplate或者Feign等，后者可以和Spring Cloud一起统一管理。有一些特例，例如aliyun的API很多，并且提供了较高质量的SDK，则可以采用直接依赖SDK的方式。大多数第三方服务的sdk均比较垃圾，不建议直接导入依赖。否则可能加重后续升级变更的风险，同时会破坏项目的代码规范或者配置规范等。第三方服务模块没有一定依赖的模块，因此依赖部分自定义。</p>
+<h5 id="项目的模块的划分-dto-client-war">项目的模块的划分：<code>**-dto</code>、<code>**-client</code>、<code>**-war</code><a href="#项目的模块的划分-dto-client-war" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>项目模块可以划分成dto、client、war三个模块，对于想要更进一步划分的情况，可以对war进行dao、service、controller的拆分。这里我仅考虑分成三个模块。其中dto主要负责编写数据传输对象、以及一些通用接口，一般这些内容是client和war同时需要用到的。war模块是业务项目的主要模块，负责从dao到controller层的所有代码，模块内部需要进行逻辑分层，以便后续根据业务需求进行拆分。client模块则提供了统一的客户端调用代码。我用的是Spring Cloud Feign，因此该模块主要用Feign编写一些客户端接口。client和war不能相互引用，他们的关系是调用方和实现方。一般client被其他项目的war引用，可以直接提供java实例来进行远程调用。Client层的抽象可以方便后续进行RPC的变更，而不用影响业务模块。</p>
+<p>Gradle脚本配置示例如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Kotlin" data-lang="Kotlin">subprojects {
+  <span style="color:#75715e">//其他配置
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (project.name.endsWith(<span style="color:#e6db74">&#34;-dto&#34;</span>)) {
+        dependencies {
+            api(project(<span style="color:#e6db74">&#34;:base-dto&#34;</span>))
+        }
+    }
+    <span style="color:#66d9ef">if</span> (project.name.endsWith(<span style="color:#e6db74">&#34;-client&#34;</span>)) {
+        dependencies {
+            api(project(<span style="color:#e6db74">&#34;:&#34;</span> + project.name.replace(<span style="color:#e6db74">&#34;-client$&#34;</span>, <span style="color:#e6db74">&#34;-dto&#34;</span>)))
+            implementation(project(<span style="color:#e6db74">&#34;:base-starter-client&#34;</span>))
+        }
+    }
+    <span style="color:#66d9ef">if</span> (project.name.endsWith(<span style="color:#e6db74">&#34;-war&#34;</span>)) {
+        dependencies {
+            api(project(<span style="color:#e6db74">&#34;:&#34;</span> + project.name.replace(<span style="color:#e6db74">&#34;-war$&#34;</span>, <span style="color:#e6db74">&#34;-dto&#34;</span>)))
+            <span style="color:#75715e">//如果统一采用的是webflux，则可以更改此依赖。
+</span><span style="color:#75715e"></span>            implementation(project(<span style="color:#e6db74">&#34;:base-starter-web&#34;</span>))
+            <span style="color:#75715e">//war需要依赖的运行时代码
+</span><span style="color:#75715e"></span>            runtimeOnly(<span style="color:#e6db74">&#34;org.springframework.cloud:spring-cloud-starter-sleuth&#34;</span>)
+            runtimeOnly(<span style="color:#e6db74">&#34;org.springframework.boot:spring-boot-starter-actuator&#34;</span>)
+            runtimeOnly(<span style="color:#e6db74">&#34;io.micrometer:micrometer-registry-prometheus&#34;</span>)
+            runtimeOnly(<span style="color:#e6db74">&#34;org.springframework.cloud:spring-cloud-starter-consul-discovery&#34;</span>)
+        }
+        <span style="color:#75715e">//其他war配置
+</span><span style="color:#75715e"></span>    }
+  <span style="color:#75715e">//其他配置
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>对于war模块，其还需要提供额外的插件，以及一些更进一步的通用配置，可以在<code>其他war配置</code>中配置如下代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Kotlin" data-lang="Kotlin">subprojects {
+  <span style="color:#75715e">//其他配置
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (project.name.endsWith(<span style="color:#e6db74">&#34;-war&#34;</span>)) {
+        apply(plugin = <span style="color:#e6db74">&#34;org.springframework.boot&#34;</span>)
+
+        <span style="color:#75715e">//针对数据库项目的定制
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (isSupportDatabase()) {
+          apply(plugin = <span style="color:#e6db74">&#34;org.flywaydb.flyway&#34;</span>)
+          tasks.withType&lt;org.flywaydb.gradle.task.AbstractFlywayTask&gt; {
+            <span style="color:#75715e">//flyway定制
+</span><span style="color:#75715e"></span>          }
+        }
+
+        tasks.withType&lt;BootRun&gt; {
+          <span style="color:#75715e">//对bootRun任务的定制
+</span><span style="color:#75715e"></span>        }
+    }
+  <span style="color:#75715e">//其他配置
+</span></code></pre></div><h3 id="服务基础组件">服务基础组件<a href="#服务基础组件" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>服务基础组件包括<code>base-starter-client</code>、<code>base-starter-db</code>、<code>base-starter-job</code>、<code>base-starter-mq</code>、<code>base-starter-redis</code>、<code>base-starter-web</code>等。其中client用于微服务间调用相关组件。其余模块则主要是数据库、Job、Web相关构件。</p>
+<h5 id="微服务调用组件base-starter-client">微服务调用组件：<code>base-starter-client</code><a href="#微服务调用组件base-starter-client" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>其直接依赖<code>org.springframework.cloud:spring-cloud-starter-openfeign</code>，主要做一些调用相关的定制。 例如，内部调用增加安全校验；对返回结果做一些处理；负载均衡定制等。</p>
+<h5 id="数据库组件base-starter-db">数据库组件：<code>base-starter-db</code><a href="#数据库组件base-starter-db" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>数据库组件主要用于定制数据库相关的配置。例如：分页插件、flyway定制、内存数据库定制等。我这边对内存数据库采用Profile管理，提供了<code>BasicFlywayAutoConfiguration</code>用于配置local模式下启动内存数据库的功能，方便开发时使用。实际部署环境则因为Profile不是local的，所以不会加载该类。依赖关系上，对flyway的依赖应当排除在打包阶段。</p>
+<p>分页插件的逻辑很简单，业务开发人员应当尽可能低的改动代码。这里我没有选择第三方库，而是自己实现了MyBatis插件。Mapper层的编写对开发人员无感，即如果要求查询分页，直接提供一个<code>RowBounds</code>的参数即可。由分页插件完成对<code>RowBounds</code>的重新配置。具体的，提供一个继承<code>RowBounds</code>的类<code>PageableBounds</code>，该类主要功能为：</p>
+<ol>
+<li>扩展RowBounds，提供<code>pageSize</code>、<code>pageNo</code>到<code>offset</code>、<code>limit</code>的转换。API仅支持<code>page</code>参数，不支持<code>offset</code>模式。</li>
+<li>提供了排序相关的参数，可以扩展API层面排序的功能。</li>
+<li>提供了回传总记录数的字段，mapper调用后把总记录数写入该字段，在Spring MVC层可以通过<code>PageableBounds</code>的引用直接得到total值。而不需要在返回的<code>List</code>中获取。一般的业务开发过程中可能对<code>List</code>加以改造，因此有可能破坏调用返回的<code>List</code>结果。</li>
+</ol>
+<p>分页插件在Spring MVC层可以增加注解，用于方便的定制可排序字段、修改默认分页大小等功能，并且可以配合Swagger提供合适的API文档。</p>
+<p>其他的定制还包括SQL模板类、<code>TypeHandler</code>定制等。</p>
+<p>除此以外，可以对项目中的SQL脚本进行严格的版本控制，其通过扩展Gradle编译任务来实现。</p>
+<p>SQL代码需要在编译过程中自动测试运行。</p>
+<h5 id="job组件base-starter-job">Job组件：<code>base-starter-job</code><a href="#job组件base-starter-job" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>简单的Job组件，直接基于<code>org.springframework.scheduling.TaskScheduler</code>。我为job模块定制按Profile加载的方案，即<code>BasicJobAutoConfiguration</code>配置只有在ActiveProfiles中包含了<code>job</code>的Profile才可以加载。这样做的好处是，同一个war项目既包括web组件又包括job组件。并且可以根据Profile是否包含job，提供两种运行方案。部署的模式为一个<code>xxx-war</code>可以提供多个<code>xxx-server</code>实例和一个<code>xxx-job</code>实例运行。绝大部分Job和web依赖相同的代码逻辑，因此简单的Job方案是合理的。</p>
+<p>具体的功能上，对于Job需要附加一些额外的组件：对链路跟踪的支持、对优雅停机的支持、对Job模式的抽象等。</p>
+<ol>
+<li>对链路跟踪的支持，提供了一个<code>JobService</code>对<code>ScheduledTaskRegistrar</code>进行额外的包装，把链路跟踪信息加到每一个Job的运行时。</li>
+<li>由于大多数Job都是对记录的依次处理，因此提供了统一个Job抽象，包含<code>SimpleBatchJob</code>和<code>BatchJob</code>。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">SimpleBatchJob</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+
+    List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getRecords</span><span style="color:#f92672">(</span>Pageable pageable<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">handle</span><span style="color:#f92672">(</span>String jobName<span style="color:#f92672">,</span> E record<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">exitOnceRecordFailed</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">BatchJob</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> SimpleBatchJob<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updateNextScanTime</span><span style="color:#f92672">(</span>E record<span style="color:#f92672">);</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>SimpleBatchJob</code>用于对Job按分页从第1页到第N页进行处理；<code>BatchJob</code>则是对Job每次进行未处理的记录查询，每次查出来的是最优先的需要进行批处理的记录，<code>updateNextScanTime</code>用于更新扫描时间戳，防止因无法处理导致的死循环。</p>
+<ol start="3">
+<li>以上两种模式执行时，对每条记录的处理都加入了是否退出的判断，用于Job需要关闭的时候自动退出Job实现优雅停机。</li>
+</ol>
+<h5 id="web组件base-starter-web">Web组件：<code>base-starter-web</code><a href="#web组件base-starter-web" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>对于web组件的定制主要基于Spring MVC的扩展点进行扩展。包含的定制内容包括Exception的定制、额外的注解支持、返回结果的统一维护等。</p>
+<ol>
+<li>Exception的定制，Java提供的Exception是基于类的，并且每个Exception结构各异，很不合适转换成统一的错误结构返回给前端。因此定制了统一个错误类<code>BaseException</code>：</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BaseException</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Throwable ex<span style="color:#f92672">,</span> <span style="color:#a6e22e">@NonNull</span> Enum<span style="color:#f92672">&lt;?&gt;</span> code<span style="color:#f92672">,</span> Object<span style="color:#f92672">...</span> args<span style="color:#f92672">){}</span>
+</code></pre></div><p>该类接收一个起因<code>Throwable</code>，一个错误枚举值<code>code</code>以及错误转换的参数列表。其中<code>Enum</code>类用于代替原来通过类的方式定义错误，而是用一个枚举值代表一个错误码。并且对于枚举值的错误码进行了规范。枚举值直接代表默认的错误码消息模板，例如：<code>HTTP_ARGUMENTS_INVALID_</code>可以转换成<code>http arguments invalid {0}</code>；而<code>HTTP_ARGUMENTS_INVALID__</code>可以转换成<code>http arguments invalid {0} {1}</code>。通过下划线<code>_</code>来分隔单词，如果单词为空字符串则表示该位置需要填入一个参数。这种结构可以简化代码编写，并且直观的提供了错误码需要几个参数的表示。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#75715e">//表示该枚举类下面错误码默认的日志级别
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">@ErrorLevel</span><span style="color:#f92672">(</span>ErrorLogLevel<span style="color:#f92672">.</span><span style="color:#a6e22e">WARN</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">enum</span> BaseErrorCode <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//直接定义该错误码的日志级别
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@ErrorLevel</span><span style="color:#f92672">(</span>ErrorLogLevel<span style="color:#f92672">.</span><span style="color:#a6e22e">INFO</span><span style="color:#f92672">)</span>
+    HTTP_ARGUMENTS_INVALID_<span style="color:#f92672">,</span> <span style="color:#75715e">//该错误码按照`_`做分隔，得到`http arguments invalid {0}`这样的消息模板。
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><ol start="2">
+<li>额外注解的支持：提供了诸如<code>@IpAddress</code>、<code>ClientInfo</code>等项目定制需求的定制。权限控制也在这里完成。</li>
+<li>返回结果的统一维护，定制统一个返回值结构，兼容Spring MVC默认的返回结构。其中<code>result</code>字段用于返回正常的结果。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#a6e22e">@Data</span>
+<span style="color:#a6e22e">@Builder</span>
+<span style="color:#a6e22e">@JsonInclude</span><span style="color:#f92672">(</span>JsonInclude<span style="color:#f92672">.</span><span style="color:#a6e22e">Include</span><span style="color:#f92672">.</span><span style="color:#a6e22e">NON_NULL</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Result</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> String traceId<span style="color:#f92672">;</span> <span style="color:#75715e">//链路跟踪ID
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Date timestamp<span style="color:#f92672">;</span> <span style="color:#75715e">//服务端时间戳
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> E result<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> PageValue pageable<span style="color:#f92672">;</span> <span style="color:#75715e">//分页模式下的分页参数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> String message<span style="color:#f92672">;</span> <span style="color:#75715e">//错误消息
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@JsonIgnore</span>
+    <span style="color:#66d9ef">private</span> String exception<span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@JsonIgnore</span>
+    <span style="color:#66d9ef">private</span> String error<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>FieldError<span style="color:#f92672">&gt;</span> errors<span style="color:#f92672">;</span> <span style="color:#75715e">//字段错误消息
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@JsonIgnore</span>
+    <span style="color:#66d9ef">private</span> String trace<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> Integer status<span style="color:#f92672">;</span> <span style="color:#75715e">//http status code
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><h5 id="其他组件">其他组件<a href="#其他组件" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>其他组件包括<code>cache</code>、<code>mq</code>等，在此不做详细描述。</p>
+<h3 id="第三方starter">第三方starter<a href="#第三方starter" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>这里描述一下对接流程：</p>
+<ol>
+<li>完成对第三方API的签名验证工具类，添加测试。</li>
+<li>完成通用HttpClient的代码结构。</li>
+<li>批量完成对DTO的导入，可以通过SublimeText工具从原始文档进行文本处理转换。不建议挨个字段复制粘贴。</li>
+<li>对接每一个API，提供最原始的XXRequest-&gt;XXResponse的方法对接。</li>
+<li>完成第三方服务层Service，把错误码转换成合理的Exception（这里主要指BaseException）。</li>
+<li>编写一定量的测试。</li>
+</ol>
+<p>完成对接后，业务项目依赖第三方starter，通过第三方服务层Service进行调用。</p>
+<h3 id="代码规范">代码规范<a href="#代码规范" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>采用PMD进行代码格式校验，可以方便的对代码进行格式规范。例如：字段、方法名字必须用camelCase，枚举值必须SNAKE_CASE；对if的嵌套层数限制。主要目的是规范代码、限制容易出错的书写方式（使得代码更易读、更安全）。</p>
+<h3 id="git工作流">Git工作流<a href="#git工作流" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>项目版本定义为1.2.3的格式，其中第一位数字是大版本号，用于重大版本升级；第二位数字是次版本号，用于每周一次的发布升级；第三位数字是HotFix版本号，用于修复线上问题时更新。</p>
+<p>Git项目主分支为master，每周一进行版本cut，切出最新版本分支x.x-release，同时升级master分支版本到x.x+1.0。版本分支x.x-release主要用于本周问题修复。</p>
+<p>SQL的版本跟随项目版本走，对于版本x.y.z的项目其SQL脚本必须是db/migration/Vx_y_z__sql_name.sql的格式，这样可以限定每个版本的SQL位置。每次进行版本升级之前，需要固定化当前版本的SQL，我提供了sqlFreeze的Gradle任务用来完成该功能。该任务会计算当前版本SQL的md5值，保存在特定的文本文件中，每次build的时候会对文本文件的md5值和历史版本SQL进行一一检查。如果发现不一致则编译失败，以此保证正常的开发不会因为误修改历史SQL文件而通过编译，合并进入主分支。</p>
+<p>分支分成两类，master和x.x-release，分别用于最新代码分支和准备上线/已上线分支。
+标签用于发布版本，格式为vx.y.z。</p>
+<h3 id="ci和cd">CI和CD<a href="#ci和cd" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>持续集成和持续部署基于上述Git工作流采用Gitlab-ci工具完成。</p>
+<ol>
+<li>分支master对应开发环境。</li>
+<li>标签vx.y.z对应测试环境。</li>
+</ol>
+<h5 id="持续集成">持续集成<a href="#持续集成" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>Gradle任务需要提供一个专门针对gitlab-ci的任务，命名为<code>buildInCI</code>。其需要根据CI环境进行定制，并且完成比开发多一些的任务：</p>
+<ol>
+<li>普通build任务</li>
+<li>运行测试任务</li>
+<li>运行PMD任务进行代码校验</li>
+<li>flyway刷SQL任务，需要附带启动一个数据库实例（参考Gitlab-ci的Service功能）</li>
+</ol>
+<h5 id="持续部署">持续部署<a href="#持续部署" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h5>
+<p>持续集成测试后，应当允许特定分支/标签的代码自动部署到开发测试环境。这里定义master分支自动部署到开发分支，标签版本vx.y.z自动部署到测试分支。</p>
+<ol>
+<li>开发环境的部署，不刷flyway，数据库Schema由开发者自行执行，不限制版本，可以随意部署最新的master版本。</li>
+<li>测试环境的部署，需要刷flyway，数据库Schema通过版本管理进行维护，因此测试环境版本只能升不能降，自动部署需要拒绝版本号降低的情况。由于持续集成测试已经检验了SQL的正确性，因此这里可以自动化部署。但是需要注意的是测试环境数据库不能把Schema变更的权限开放给开发者，否则可能导致数据库Schema异常部署失败。</li>
+</ol>
+
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">更多文章</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/20200623/">
+                <span class="button__icon">←</span>
+                <span class="button__text">微服务架构</span>
+            </a>
+        </span>
+        
+        
+    </div>
+</div>
+
+  
+
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "icymint" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>©2020-2020，<a href="http://gohugo.io">Hugo</a>、<a href="https://github.com/panr/hugo-theme-terminal">Terminal</a>驱动。</span>
+    
+    
+      </div>
+  </div>
+</footer>
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+  
+</div>
+
+</body>
+</html>

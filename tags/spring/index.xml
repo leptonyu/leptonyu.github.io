@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring on 云淡风轻</title>
+    <link>/tags/spring/</link>
+    <description>Recent content in Spring on 云淡风轻</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>©2020</copyright>
+    <lastBuildDate>Mon, 22 Jun 2020 10:10:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spring Cloud 微服务项目构建</title>
+      <link>/posts/20200602/</link>
+      <pubDate>Mon, 22 Jun 2020 10:10:00 +0800</pubDate>
+      
+      <guid>/posts/20200602/</guid>
+      <description>本文用于记录搭建基于Spring Cloud的微服务项目的架构骨架。基础构建工具使用Gradle/KotlinSDL，Java版本为11，微服</description>
+    </item>
+    
+  </channel>
+</rss>

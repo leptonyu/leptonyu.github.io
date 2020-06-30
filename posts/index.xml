@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 云淡风轻</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on 云淡风轻</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>©2020</copyright>
+    <lastBuildDate>Tue, 23 Jun 2020 15:56:02 +0800</lastBuildDate>
+    
+	<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>微服务架构</title>
+      <link>/posts/20200623/</link>
+      <pubDate>Tue, 23 Jun 2020 15:56:02 +0800</pubDate>
+      
+      <guid>/posts/20200623/</guid>
+      <description>mermaid.initialize({ theme: &#39;dark&#39;, themeCSS: &#39;&#39;, cloneCssStyles: false, useMaxWidth: true, htmlLabels: false, flowchart: { curve: &#39;basis&#39; } }); graph TD A[Client] -- B[Load Balancer] B -- C[Server01] B -- D[Server02] mermaid.initialize({ theme: &#39;dark&#39;, themeCSS: &#39;&#39;, cloneCssStyles: false, useMaxWidth: true, htmlLabels: false, flowchart: { curve: &#39;basis&#39; } }); pie title Key elements in Product X &#34;Calcium&#34; : 42.96 &#34;Potassium&#34; : 50.05 &#34;Magnesium&#34; : 10.01 &#34;Iron&#34; : 5</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud 微服务项目构建</title>
+      <link>/posts/20200602/</link>
+      <pubDate>Mon, 22 Jun 2020 10:10:00 +0800</pubDate>
+      
+      <guid>/posts/20200602/</guid>
+      <description>本文用于记录搭建基于Spring Cloud的微服务项目的架构骨架。基础构建工具使用Gradle/KotlinSDL，Java版本为11，微服</description>
+    </item>
+    
+  </channel>
+</rss>
