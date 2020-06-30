@@ -7,19 +7,10 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>©2020</copyright>
-    <lastBuildDate>Tue, 23 Jun 2020 15:56:02 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2020 10:10:00 +0800</lastBuildDate>
     
 	<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>微服务架构</title>
-      <link>/posts/20200623/</link>
-      <pubDate>Tue, 23 Jun 2020 15:56:02 +0800</pubDate>
-      
-      <guid>/posts/20200623/</guid>
-      <description>mermaid.initialize({ theme: &#39;dark&#39;, themeCSS: &#39;&#39;, cloneCssStyles: false, useMaxWidth: true, htmlLabels: false, flowchart: { curve: &#39;basis&#39; } }); graph TD A[Client] -- B[Load Balancer] B -- C[Server01] B -- D[Server02] mermaid.initialize({ theme: &#39;dark&#39;, themeCSS: &#39;&#39;, cloneCssStyles: false, useMaxWidth: true, htmlLabels: false, flowchart: { curve: &#39;basis&#39; } }); pie title Key elements in Product X &#34;Calcium&#34; : 42.96 &#34;Potassium&#34; : 50.05 &#34;Magnesium&#34; : 10.01 &#34;Iron&#34; : 5</description>
-    </item>
     
     <item>
       <title>Spring Cloud 微服务项目构建</title>
